@@ -58,13 +58,27 @@ export class AuthService {
       throw error;
     }
   }
-
-async login(dto: LoginDto): Promise<{ accessToken: string; refreshToken: string; user: any }> {
+  async login(dto: LoginDto) {
   const user = await this.userModel.findOne({ email: dto.email }).exec();
-  if (!user) throw new UnauthorizedException('Invalid credentials');
+
+  if (!user) {
+    // Email not found
+    throw new UnauthorizedException('Email does not exist');
+  }
 
   const passwordValid = await bcrypt.compare(dto.password, user.password);
-  if (!passwordValid) throw new UnauthorizedException('Invalid credentials');
+  if (!passwordValid) {
+    // Password incorrect
+    throw new UnauthorizedException('Your password is incorrect');
+  }
+
+  // Optional: check if user is blocked or deleted
+  if (user.status === 'blocked') {
+    throw new UnauthorizedException('User is blocked');
+  }
+  if (user.status === 'deleted') {
+    throw new UnauthorizedException('User is deleted');
+  }
 
   const tokens = await this.getTokens(user._id.toString(), user.role, user.email);
   user.refreshToken = await this.hashData(tokens.refreshToken);
@@ -78,6 +92,7 @@ async login(dto: LoginDto): Promise<{ accessToken: string; refreshToken: string;
       lastName: user.lastName,
       email: user.email,
       role: user.role,
+      status: user.status,
     },
   };
 }
