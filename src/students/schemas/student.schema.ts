@@ -62,6 +62,9 @@ export class Student extends Document {
   // ✅ Added date of birth
   @Prop({ required: true })
   dateOfBirth: Date;
+
+   @Prop({ default: 'Student' })
+  role: string;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

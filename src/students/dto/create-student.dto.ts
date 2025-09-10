@@ -1,4 +1,13 @@
-import { IsOptional, IsString, IsNotEmpty, IsEnum, IsNumber, IsEmail, MinLength, IsDateString } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsEnum,
+  IsNumber,
+  IsEmail,
+  MinLength,
+  IsDateString,
+} from 'class-validator';
 
 export class CreateStudentDto {
   @IsOptional()
@@ -51,7 +60,7 @@ export class CreateStudentDto {
 
   @IsOptional()
   @IsNumber()
-  classRole?: number; 
+  classRole?: number;
 
   @IsEmail()
   @IsNotEmpty()
@@ -66,4 +75,8 @@ export class CreateStudentDto {
   @IsDateString()
   @IsNotEmpty()
   dateOfBirth: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
 }

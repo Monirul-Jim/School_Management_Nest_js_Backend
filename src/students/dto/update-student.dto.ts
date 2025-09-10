@@ -1,4 +1,12 @@
-import { IsOptional, IsString, IsEnum, IsNumber, IsEmail, MinLength, IsDateString } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsEnum,
+  IsNumber,
+  IsEmail,
+  MinLength,
+  IsDateString,
+} from 'class-validator';
 
 export class UpdateStudentDto {
   @IsOptional()
@@ -65,4 +73,8 @@ export class UpdateStudentDto {
   @IsOptional()
   @IsDateString()
   dateOfBirth?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
 }
