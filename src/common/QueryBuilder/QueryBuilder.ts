@@ -8,6 +8,7 @@ type QueryBuilderOptions<T> = {
   searchFields?: (keyof T)[];
   sortField?: keyof T;
   sortOrder?: 'asc' | 'desc';
+  filters?: Record<string, any>; // ✅ add filters
 };
 
 export class QueryBuilder<T extends Document> {
@@ -24,7 +25,8 @@ export class QueryBuilder<T extends Document> {
     const limit = Number(this.options.limit) || 10;
     const skip = (page - 1) * limit;
 
-    let searchQuery = {};
+    // ✅ Build search query
+    let searchQuery: any = {};
     if (this.options.search && this.options.searchFields?.length) {
       searchQuery = {
         $or: this.options.searchFields.map((field) => ({
@@ -33,12 +35,19 @@ export class QueryBuilder<T extends Document> {
       };
     }
 
+    // ✅ Merge role/status filters
+    if (this.options.filters) {
+      searchQuery = { ...searchQuery, ...this.options.filters };
+    }
+
+    // ✅ Sorting
     const sort: any = {};
     if (this.options.sortField) {
       sort[this.options.sortField as string] =
         this.options.sortOrder === 'desc' ? -1 : 1;
     }
 
+    // ✅ Execute query
     const [total, data] = await Promise.all([
       this.model.countDocuments(searchQuery),
       this.model.find(searchQuery).sort(sort).skip(skip).limit(limit),
@@ -51,7 +60,7 @@ export class QueryBuilder<T extends Document> {
       totalPages,
       page,
       limit,
-      data, // renamed from 'items' to 'data'
+      data,
     };
   }
 }

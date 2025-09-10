@@ -1,4 +1,3 @@
-
 import {
   Controller,
   Post,
@@ -30,7 +29,7 @@ export interface RequestWithUserAndCookies extends Request {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @UseGuards(RolesGuard)
-  @Roles('Admin') 
+  @Roles('Admin')
   @Get()
   async getAll(
     @Query('page') page?: number,
@@ -38,6 +37,8 @@ export class AuthController {
     @Query('search') search?: string,
     @Query('sortField') sortField?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('role') role?: string,
+    @Query('status') status?: string,
   ) {
     return this.authService.getAllUsers({
       page,
@@ -45,6 +46,8 @@ export class AuthController {
       search,
       sortField: sortField as any,
       sortOrder,
+      role,
+      status,
     });
   }
 
@@ -93,19 +96,18 @@ export class AuthController {
     return { accessToken: tokens.accessToken };
   }
 
-// auth.controller.ts
-@Patch('update-role')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('Admin')
-updateRole(@Body() dto: UpdateRoleDto) {
-  return this.authService.updateUserRole(dto);
-}
+  // auth.controller.ts
+  @Patch('update-role')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('Admin')
+  updateRole(@Body() dto: UpdateRoleDto) {
+    return this.authService.updateUserRole(dto);
+  }
 
-@Patch('update-status')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('Admin')
-updateStatus(@Body() dto: UpdateStatusDto) {
-  return this.authService.updateUserStatus(dto);
-}
-
+  @Patch('update-status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('Admin')
+  updateStatus(@Body() dto: UpdateStatusDto) {
+    return this.authService.updateUserStatus(dto);
+  }
 }

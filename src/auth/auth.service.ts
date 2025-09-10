@@ -121,25 +121,49 @@ export class AuthService {
     throw new UnauthorizedException('Invalid refresh token');
   }
 }
+async getAllUsers(params: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortField?: keyof User;
+  sortOrder?: 'asc' | 'desc';
+  role?: string;
+  status?: string;
+}) {
+  const qb = new QueryBuilder<UserDocument>(this.userModel, {
+    page: params.page,
+    limit: params.limit || 10,
+    search: params.search,
+    searchFields: ['firstName', 'lastName', 'email'],
+    sortField: params.sortField || 'firstName',
+    sortOrder: params.sortOrder || 'asc',
+    filters: {
+      ...(params.role ? { role: params.role } : {}),
+      ...(params.status ? { status: params.status } : {}),
+    },
+  });
 
- async getAllUsers(params: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    sortField?: keyof User;
-    sortOrder?: 'asc' | 'desc';
-  }) {
-    const qb = new QueryBuilder<UserDocument>(this.userModel, {
-      page: params.page,
-      limit: params.limit || 10,
-      search: params.search,
-      searchFields: ['firstName', 'lastName', 'email'],
-      sortField: params.sortField || 'firstName',
-      sortOrder: params.sortOrder || 'asc',
-    });
+  return qb.execute();
+}
 
-    return qb.execute();
-  }
+//  async getAllUsers(params: {
+//     page?: number;
+//     limit?: number;
+//     search?: string;
+//     sortField?: keyof User;
+//     sortOrder?: 'asc' | 'desc';
+//   }) {
+//     const qb = new QueryBuilder<UserDocument>(this.userModel, {
+//       page: params.page,
+//       limit: params.limit || 10,
+//       search: params.search,
+//       searchFields: ['firstName', 'lastName', 'email'],
+//       sortField: params.sortField || 'firstName',
+//       sortOrder: params.sortOrder || 'asc',
+//     });
+
+//     return qb.execute();
+//   }
 
    async updateUserRole(dto: UpdateRoleDto) {
   const user = await this.userModel.findById(dto.userId).exec();

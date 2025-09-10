@@ -1,5 +1,14 @@
 // src/student-class/student-class.controller.ts
-import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { CreateStudentClassDto } from './dto/create-student-class.dto';
 import { UpdateStudentClassDto } from './dto/update-student-class.dto';
 import { ClassesService } from './classes.service';
@@ -14,17 +23,26 @@ export class ClassesController {
     return this.studentClassService.create(createDto);
   }
 
- @Get()
-findAll(
-  @Query('page') page?: number,
-  @Query('limit') limit?: number,
-  @Query('search') search?: string,
-  @Query('sortField') sortField?: keyof StudentClass,
-  @Query('sortOrder') sortOrder?: 'asc' | 'desc',
-) {
-  return this.studentClassService.findAll(page ? +page : 1, limit ? +limit : 10, search, sortField, sortOrder);
-}
-
+  @Get()
+  findAll(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('search') search?: string,
+    @Query('sortField') sortField?: keyof StudentClass,
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+  ) {
+    return this.studentClassService.findAll(
+      page ? +page : 1,
+      limit ? +limit : 10,
+      search,
+      sortField,
+      sortOrder,
+    );
+  }
+  @Get('all-classes')
+  async getAllClasses() {
+    return this.studentClassService.getAllClasses();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

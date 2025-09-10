@@ -67,5 +67,13 @@ export class ClassesService {
   if (!deleted) throw new NotFoundException('Student class not found');
   return deleted;
 }
+// student-class.service.ts
+async getAllClasses() {
+  // Return all documents where isDeleted is false, OR if isDeleted is not set (undefined)
+  return this.studentClassModel
+    .find({ $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }] })
+    .sort({ createdAt: -1 });
+}
+
 
 }
