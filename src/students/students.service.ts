@@ -11,7 +11,6 @@ import { Student } from './schemas/student.schema';
 import { QueryBuilder } from 'src/common/QueryBuilder/QueryBuilder';
 import {
   StudentClass,
-  StudentClassDocument,
 } from 'src/classes/schemas/student-class.schema';
 import { UpdateStudentDto } from './dto/update-student.dto';
 
@@ -68,24 +67,24 @@ export class StudentService {
     classId?: string;
     bloodGroup?: string;
   }) {
-    const qb = new QueryBuilder<Student>(this.studentModel, {
-      page: params.page,
-      limit: params.limit || 10,
-      search: params.search,
-      searchFields: ['firstName', 'lastName', 'fatherName', 'motherName'],
-      sortField: params.sortField || 'firstName',
-      sortOrder: params.sortOrder || 'asc',
-      filters: {
-        ...(params.classId
-          ? { class: new Types.ObjectId(params.classId) }
-          : {}),
-        ...(params.bloodGroup ? { bloodGroup: params.bloodGroup } : {}),
-      },
-    });
+   const qb = new QueryBuilder<Student>(this.studentModel, {
+  page: params.page,
+  limit: params.limit || 10,
+  search: params.search,
+  searchFields: ['firstName', 'lastName', 'fatherName', 'motherName'],
+  sortField: params.sortField || 'firstName',
+  sortOrder: params.sortOrder || 'asc',
+  filters: {
+     ...(params.classId ? { class: params.classId } : {}),
+    ...(params.bloodGroup ? { bloodGroup: params.bloodGroup } : {}),
+
+  },
+});
+
 
     const result = await qb.execute();
 
-    // Populate the 'class' field for each student
+    // Populate 'class' details
     const populatedStudents = await this.studentModel.populate(result.data, {
       path: 'class',
       select: 'name',
@@ -96,6 +95,7 @@ export class StudentService {
       data: populatedStudents,
     };
   }
+
   async updateStudent(id: string, dto: UpdateStudentDto) {
     const student = await this.studentModel.findById(id);
     if (!student) throw new NotFoundException('Student not found');

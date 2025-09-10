@@ -13,26 +13,27 @@ export class StudentController {
     return this.studentService.registerStudent(dto);
   }
 
-  @Get()
-  async getAll(
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
-    @Query('search') search?: string,
-    @Query('sortField') sortField?: string,
-    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
-    @Query('classId') classId?: string,
-    @Query('bloodGroup') bloodGroup?: string,
-  ) {
-    return this.studentService.getAllStudents({
-      page,
-      limit,
-      search,
-      sortField: sortField as any,
-      sortOrder,
-      classId,
-      bloodGroup,
-    });
-  }
+ @Get()
+async getAll(
+  @Query('page') page?: number,
+  @Query('limit') limit?: number,
+  @Query('search') search?: string,
+  @Query('sortField') sortField?: string,
+  @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+  @Query('classId') classId?: string,
+  @Query('bloodGroup') bloodGroup?: string,
+) {
+  return this.studentService.getAllStudents({
+    page,
+    limit,
+    search,
+    sortField: sortField as any,
+    sortOrder,
+    classId,
+    bloodGroup,
+  });
+}
+
   
   @Patch(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateStudentDto) {
