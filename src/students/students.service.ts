@@ -76,7 +76,9 @@ export class StudentService {
       sortField: params.sortField || 'firstName',
       sortOrder: params.sortOrder || 'asc',
       filters: {
-        ...(params.classId ? { class: params.classId } : {}),
+        ...(params.classId
+          ? { class: new Types.ObjectId(params.classId) }
+          : {}),
         ...(params.bloodGroup ? { bloodGroup: params.bloodGroup } : {}),
       },
     });
@@ -183,9 +185,8 @@ export class StudentService {
         firstName: student.firstName,
         lastName: student.lastName,
         email: student.email,
-        role:student.role
+        role: student.role,
       },
     };
   }
-  
 }

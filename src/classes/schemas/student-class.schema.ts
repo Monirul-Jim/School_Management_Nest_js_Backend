@@ -8,6 +8,8 @@ export type StudentClassDocument = StudentClass & Document;
 export class StudentClass {
   @Prop({ required: true })
   name: string;
+  @Prop({ required: true })
+  grade: number;
 
   @Prop({ default: false })
   isDeleted: boolean;

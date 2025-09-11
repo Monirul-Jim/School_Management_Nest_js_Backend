@@ -1,4 +1,5 @@
 export class UpdateStudentClassDto {
   name?: string;
-  isDeleted?:false
+  isDeleted?:false;
+  grade?:number;
 }
