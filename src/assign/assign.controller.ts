@@ -10,6 +10,7 @@ export class AssignController {
   async assignSubjects(@Body() dto: AssignSubjectDto) {
     return this.assignService.assignSubjects(dto);
   }
+  
    @Get('pagination')
   async getAllAssignSubjects(
     @Query('page') page?: string,

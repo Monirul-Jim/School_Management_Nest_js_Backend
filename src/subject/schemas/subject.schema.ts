@@ -11,13 +11,17 @@ export class Subject {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'StudentClass', required: true })
-  studentClass: Types.ObjectId | StudentClass;
+  @Prop({ type: [Types.ObjectId], ref: 'StudentClass', required: true })
+  studentClass: Types.ObjectId[] | StudentClass[];
 
   @Prop({ required: true })
   totalMark: number;
 
-  @Prop({ type: [String], enum: SubjectType, default: [SubjectType.MCQ, SubjectType.CQ] })
+  @Prop({
+    type: [String],
+    enum: SubjectType,
+    default: [SubjectType.MCQ, SubjectType.CQ],
+  })
   types: SubjectType[];
 
   @Prop({ default: 0 })

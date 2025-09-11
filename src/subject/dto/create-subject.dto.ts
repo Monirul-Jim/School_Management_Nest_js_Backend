@@ -1,5 +1,15 @@
 // src/subject/dto/create-subject.dto.ts
-import { IsString, IsNotEmpty, IsOptional, IsMongoId, IsNumber, Min, Max, IsEnum, ValidateIf } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsMongoId,
+  IsNumber,
+  Min,
+  Max,
+  IsEnum,
+  ValidateIf,
+} from 'class-validator';
 
 export enum SubjectType {
   MCQ = 'MCQ',
@@ -15,7 +25,7 @@ export class CreateSubjectDto {
 
   @IsMongoId()
   @IsNotEmpty()
-  studentClass: string;
+  studentClass: string[]; // array of class IDs
 
   @IsNumber()
   @Min(1)
@@ -24,22 +34,22 @@ export class CreateSubjectDto {
   @IsEnum(SubjectType, { each: true })
   types: SubjectType[]; // e.g., ['MCQ', 'CQ']
 
-  @ValidateIf(o => o.types.includes(SubjectType.MCQ))
+  @ValidateIf((o) => o.types.includes(SubjectType.MCQ))
   @IsNumber()
   @Min(0)
   mcqMark: number;
 
-  @ValidateIf(o => o.types.includes(SubjectType.CQ))
+  @ValidateIf((o) => o.types.includes(SubjectType.CQ))
   @IsNumber()
   @Min(0)
   cqMark: number;
 
-  @ValidateIf(o => o.types.includes(SubjectType.PRACTICAL))
+  @ValidateIf((o) => o.types.includes(SubjectType.PRACTICAL))
   @IsNumber()
   @Min(0)
   practicalMark: number;
-  
-  @ValidateIf(o => o.types.includes(SubjectType.WR))
+
+  @ValidateIf((o) => o.types.includes(SubjectType.WR))
   @IsNumber()
   @Min(0)
   WR: number;

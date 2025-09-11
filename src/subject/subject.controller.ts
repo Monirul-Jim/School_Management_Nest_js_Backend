@@ -18,12 +18,12 @@ import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 @Controller('subjects')
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
-
-  @Post()
-  async create(@Body() createSubjectDto: CreateSubjectDto): Promise<Subject> {
+ @Post()
+  async create(
+    @Body() createSubjectDto: CreateSubjectDto | CreateSubjectDto[],
+  ): Promise<Subject | Subject[]> {
     return this.subjectService.create(createSubjectDto);
   }
-
   @Get()
   async findAll(): Promise<Subject[]> {
     return this.subjectService.findAll();

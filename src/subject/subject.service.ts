@@ -16,22 +16,32 @@ export class SubjectService {
   constructor(
     @InjectModel(Subject.name) private subjectModel: Model<SubjectDocument>,
   ) {}
+  async create(
+    createSubjectDto: CreateSubjectDto | CreateSubjectDto[],
+  ): Promise<Subject | Subject[]> {
+    const createOne = async (dto: CreateSubjectDto) => {
+      const {
+        totalMark,
+        mcqMark = 0,
+        cqMark = 0,
+        practicalMark = 0,
+        WR = 0,
+      } = dto;
 
-  async create(createSubjectDto: CreateSubjectDto): Promise<Subject> {
-    const {
-      totalMark,
-      mcqMark = 0,
-      cqMark = 0,
-      practicalMark = 0,
-      WR = 0,
-    } = createSubjectDto;
+      if (mcqMark + cqMark + practicalMark + WR > totalMark) {
+        throw new BadRequestException(`Invalid marks for subject: ${dto.name}`);
+      }
 
-    if (mcqMark + cqMark + practicalMark + WR > totalMark) {
-      throw new BadRequestException('Sum of marks cannot exceed total mark');
+      // Each subject knows its class & optional section
+      const created = new this.subjectModel(dto);
+      return created.save();
+    };
+
+    if (Array.isArray(createSubjectDto)) {
+      return Promise.all(createSubjectDto.map((dto) => createOne(dto)));
     }
 
-    const createdSubject = new this.subjectModel(createSubjectDto);
-    return createdSubject.save();
+    return createOne(createSubjectDto);
   }
 
   async findAll(): Promise<Subject[]> {

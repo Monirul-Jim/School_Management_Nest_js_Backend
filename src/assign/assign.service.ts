@@ -1,10 +1,17 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, isValidObjectId } from 'mongoose';
 import { AssignSubjectDto } from './dto/assign-subject.dto';
 import { Student } from 'src/students/schemas/student.schema';
 import { Subject } from 'src/subject/schemas/subject.schema';
-import { AssignSubject, AssignSubjectDocument } from './schemas/assign-subject.schema';
+import {
+  AssignSubject,
+  AssignSubjectDocument,
+} from './schemas/assign-subject.schema';
 import { QueryBuilder } from 'src/common/QueryBuilder/QueryBuilder';
 
 @Injectable()
@@ -12,7 +19,8 @@ export class AssignService {
   constructor(
     @InjectModel(Student.name) private studentModel: Model<Student>,
     @InjectModel(Subject.name) private subjectModel: Model<Subject>,
-    @InjectModel(AssignSubject.name) private assignSubjectModel: Model<AssignSubjectDocument>,
+    @InjectModel(AssignSubject.name)
+    private assignSubjectModel: Model<AssignSubjectDocument>,
   ) {}
 
   async assignSubjects(dto: AssignSubjectDto) {
@@ -50,12 +58,17 @@ export class AssignService {
       studentId: dto.studentId,
       classId: dto.classId,
       subjectIds: validSubjectIds,
-      mainSubjectId: dto.mainSubjectId ? new Types.ObjectId(dto.mainSubjectId) : undefined,
-      fourthSubjectId: dto.fourthSubjectId ? new Types.ObjectId(dto.fourthSubjectId) : undefined,
+      mainSubjectId: dto.mainSubjectId
+        ? new Types.ObjectId(dto.mainSubjectId)
+        : undefined,
+      fourthSubjectId: dto.fourthSubjectId
+        ? new Types.ObjectId(dto.fourthSubjectId)
+        : undefined,
     });
 
     return assignment;
   }
+
   async findAllAssignSubjects(query: {
     page?: number;
     limit?: number;
@@ -71,17 +84,20 @@ export class AssignService {
       filters.studentId = new Types.ObjectId(query.studentId);
     }
     if (query.classId && Types.ObjectId.isValid(query.classId)) {
-      filters.classId = new Types.ObjectId(query.classId);
+      filters.classId =query.classId;
     }
 
- const qb = new QueryBuilder<AssignSubjectDocument>(this.assignSubjectModel, {
-  page: query.page,
-  limit: query.limit,
-  search: query.search,
-  searchFields: ['studentId'],
-  sortOrder: query.sortOrder,
-  filters,
-});
+    const qb = new QueryBuilder<AssignSubjectDocument>(
+      this.assignSubjectModel,
+      {
+        page: query.page,
+        limit: query.limit,
+        search: query.search,
+        searchFields: ['studentId'],
+        sortOrder: query.sortOrder,
+        filters,
+      },
+    );
 
     const result = await qb.execute();
 
@@ -95,5 +111,4 @@ export class AssignService {
 
     return { ...result, data: populatedData };
   }
-  
 }
