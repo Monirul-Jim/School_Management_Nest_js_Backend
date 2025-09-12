@@ -1,50 +1,127 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
-import { AssignMarksDto } from "./dto/create-grade.dto";
-import { AssignSubject, AssignSubjectDocument } from "src/assign/schemas/assign-subject.schema";
-import { StudentMark, StudentMarkDocument } from "./schemas/grade.schema";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import {
+  AssignSubject,
+  AssignSubjectDocument,
+} from 'src/assign/schemas/assign-subject.schema';
+import { StudentMark, StudentMarkDocument } from './schemas/grade.schema';
+import { QueryBuilder } from 'src/common/QueryBuilder/QueryBuilder';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class GradeService {
   constructor(
-    @InjectModel(StudentMark.name) private studentMarkModel: Model<StudentMarkDocument>,
-    @InjectModel(AssignSubject.name) private assignSubjectModel: Model<AssignSubjectDocument>,
+    @InjectModel(StudentMark.name)
+    private studentMarkModel: Model<StudentMarkDocument>,
+    @InjectModel(AssignSubject.name)
+    private assignSubjectModel: Model<AssignSubjectDocument>,
+    @InjectModel(AssignSubject.name)
+    private assignedSubjectModel: Model<AssignSubjectDocument>,
   ) {}
 
-  async assignMarks(dto: AssignMarksDto) {
-    // Check if assignment exists
-    const assignment = await this.assignSubjectModel.findById(dto.assignSubjectId);
-    if (!assignment) throw new NotFoundException('Assignment not found');
+  async getAllGrades(queryParams: any) {
+    // Build filters for query builder
+    const filters: Record<string, any> = {};
+    if (queryParams.classId) filters.classId = queryParams.classId;
+    if (queryParams.studentId)
+      filters.studentId = new Types.ObjectId(queryParams.studentId);
 
-    // Check if marks record exists, if not create
-    let studentMark = await this.studentMarkModel.findOne({
-      assignSubjectId: dto.assignSubjectId,
-    });
+    // Initialize QueryBuilder for assignments
+    const qb = new QueryBuilder<AssignSubjectDocument>(
+      this.assignSubjectModel,
+      {
+        page: queryParams.page,
+        limit: queryParams.limit,
+        search: queryParams.search,
+        searchFields: ['studentId', 'subjectIds'], // optional, adjust if needed
+        filters,
+        sortField: queryParams.sortField || 'createdAt',
+        sortOrder: queryParams.sortOrder || 'desc',
+      },
+    );
 
-    if (!studentMark) {
-      studentMark = await this.studentMarkModel.create({
-        assignSubjectId: dto.assignSubjectId,
-      });
-    }
+    // Execute query
+    const result = await qb.execute();
 
-    // Update marks
-    studentMark.mcqMark = dto.mcqMark ?? studentMark.mcqMark;
-    studentMark.cqMark = dto.cqMark ?? studentMark.cqMark;
-    studentMark.practicalMark = dto.practicalMark ?? studentMark.practicalMark;
-    studentMark.WR = dto.WR ?? studentMark.WR;
+    // Populate students, class, subjects, mainSubjectId, fourthSubjectId
+    const populatedData = await Promise.all(
+      result.data.map(async (assign: any) => {
+        const populated = await this.assignSubjectModel
+          .findById(assign._id)
+          .populate('studentId')
+          .populate('classId')
+          .populate('subjectIds')
+          .populate('mainSubjectId')
+          .populate('fourthSubjectId')
+          .lean();
 
-    studentMark.totalMark =
-      (studentMark.mcqMark || 0) +
-      (studentMark.cqMark || 0) +
-      (studentMark.practicalMark || 0) +
-      (studentMark.WR || 0);
+        const studentMark = await this.studentMarkModel
+          .findOne({ assignSubjectId: assign._id })
+          .lean();
+        return {
+          ...populated,
+          marks: studentMark || null,
+        };
+      }),
+    );
 
-    await studentMark.save();
-    return studentMark;
+    return {
+      total: result.total,
+      totalPages: result.totalPages,
+      page: result.page,
+      limit: result.limit,
+      data: populatedData,
+    };
   }
+  
+  async upsertMarks(assignSubjectId: string, marksInput: any) {
+    const assign = await this.assignSubjectModel
+      .findById(assignSubjectId)
+      .populate('subjectIds')
+      .lean();
+    console.log(assignSubjectId, marksInput);
+    if (!assign) throw new Error('Assignment not found');
 
-  async getMarksByAssignment(assignSubjectId: string) {
-    return this.studentMarkModel.findOne({ assignSubjectId });
+    const subjectsData = Object.entries(marksInput).map(
+      ([subjectId, markObj]: [string, any]) => {
+        const subjectInfo: any = assign.subjectIds.find(
+          (s: any) => s._id.toString() === subjectId,
+        );
+        if (!subjectInfo) throw new Error('Subject not found');
+
+        let total = 0;
+        Object.entries(markObj).forEach(([type, value]) => {
+          total += Number(value) || 0;
+        });
+
+        if (total > (subjectInfo.totalMark || 100)) {
+          throw new Error(
+            `Total marks for ${subjectInfo.name} cannot exceed ${subjectInfo.totalMark || 100}`,
+          );
+        }
+
+        return {
+          subjectId: new Types.ObjectId(subjectId),
+          marks: markObj,
+          totalMark: total,
+        };
+      },
+    );
+
+    const existingMark = await this.studentMarkModel.findOne({
+      assignSubjectId,
+    });
+    if (existingMark) {
+      existingMark.subjects = subjectsData;
+      return existingMark.save();
+    } else {
+      const newMark = new this.studentMarkModel({
+        assignSubjectId,
+        studentId: assign.studentId,
+        subjects: subjectsData,
+      });
+      return newMark.save();
+    }
   }
 }

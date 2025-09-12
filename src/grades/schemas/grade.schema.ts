@@ -6,23 +6,20 @@ export type StudentMarkDocument = StudentMark & Document;
 
 @Schema({ timestamps: true })
 export class StudentMark {
-  @Prop({ type: Types.ObjectId, ref: AssignSubject.name, required: true })
+  @Prop({ type: Types.ObjectId, ref: 'AssignSubject', required: true })
   assignSubjectId: Types.ObjectId;
 
-  @Prop({ type: Number, default: 0 })
-  mcqMark: number;
+  @Prop({ type: Types.ObjectId, ref: 'Student', required: true })
+  studentId: Types.ObjectId;
 
-  @Prop({ type: Number, default: 0 })
-  cqMark: number;
-
-  @Prop({ type: Number, default: 0 })
-  practicalMark: number;
-
-  @Prop({ type: Number, default: 0 })
-  WR: number;
-
-  @Prop({ type: Number, default: 0 })
-  totalMark: number;
+  @Prop([
+    {
+      subjectId: { type: Types.ObjectId, ref: 'Subject', required: true },
+      marks: { type: Map, of: Number }, // WR, MCQ, Practical, etc.
+      totalMark: { type: Number, default: 0 },
+    },
+  ])
+  subjects: { subjectId: Types.ObjectId; marks: Map<string, number>; totalMark: number }[];
 }
 
 export const StudentMarkSchema = SchemaFactory.createForClass(StudentMark);
