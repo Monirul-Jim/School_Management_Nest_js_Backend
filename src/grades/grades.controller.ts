@@ -1,10 +1,22 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { GradeService } from './grades.service';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('grades')
 export class GradesController {
   constructor(private readonly gradeService: GradeService) {}
   // Fetch all combined data (students, classes, subjects, and marks)
+  @UseGuards(RolesGuard)
+  @Roles('Admin', 'Teacher')
   @Get()
   async getAllGrades(
     @Query('classId') classId?: string,
@@ -25,26 +37,25 @@ export class GradesController {
       sortOrder,
     });
   }
-
   @Post('marks/:assignSubjectId')
-  async upsertMarks(
+  async updateMarks(
     @Param('assignSubjectId') assignSubjectId: string,
-    @Body() marksInput: Record<string, Record<string, number>>, // { subjectId: { WR: 20, MCQ: 10 } }
+    @Body() marksInput: Record<string, Record<string, number>>,
   ) {
     try {
-      const result = await this.gradeService.upsertMarks(
+      const result = await this.gradeService.updateMarks(
         assignSubjectId,
         marksInput,
       );
       return {
         success: true,
-        message: 'Marks saved successfully',
+        message: 'Marks updated successfully',
         data: result,
       };
     } catch (error) {
       return {
         success: false,
-        message: error.message || 'Failed to save marks',
+        message: error.message || 'Failed to update marks',
       };
     }
   }

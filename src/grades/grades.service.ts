@@ -21,30 +21,26 @@ export class GradeService {
   ) {}
 
   async getAllGrades(queryParams: any) {
-    // Build filters for query builder
     const filters: Record<string, any> = {};
     if (queryParams.classId) filters.classId = queryParams.classId;
     if (queryParams.studentId)
       filters.studentId = new Types.ObjectId(queryParams.studentId);
 
-    // Initialize QueryBuilder for assignments
     const qb = new QueryBuilder<AssignSubjectDocument>(
       this.assignSubjectModel,
       {
         page: queryParams.page,
         limit: queryParams.limit,
         search: queryParams.search,
-        searchFields: ['studentId', 'subjectIds'], // optional, adjust if needed
+        searchFields: ['studentId', 'subjectIds'],
         filters,
         sortField: queryParams.sortField || 'createdAt',
         sortOrder: queryParams.sortOrder || 'desc',
       },
     );
 
-    // Execute query
     const result = await qb.execute();
 
-    // Populate students, class, subjects, mainSubjectId, fourthSubjectId
     const populatedData = await Promise.all(
       result.data.map(async (assign: any) => {
         const populated = await this.assignSubjectModel
@@ -56,12 +52,19 @@ export class GradeService {
           .populate('fourthSubjectId')
           .lean();
 
-        const studentMark = await this.studentMarkModel
-          .findOne({ assignSubjectId: assign._id })
-          .lean();
+        const marks =
+          (populated?.marks || []).map((m: any) => ({
+            ...m,
+            marks: m.marks
+              ? Object.fromEntries(
+                  Object.entries(m.marks).map(([k, v]) => [k, v]),
+                )
+              : {}, // fallback to empty object
+          })) || [];
+
         return {
           ...populated,
-          marks: studentMark || null,
+          marks,
         };
       }),
     );
@@ -74,54 +77,35 @@ export class GradeService {
       data: populatedData,
     };
   }
-  
-  async upsertMarks(assignSubjectId: string, marksInput: any) {
-    const assign = await this.assignSubjectModel
-      .findById(assignSubjectId)
-      .populate('subjectIds')
-      .lean();
-    console.log(assignSubjectId, marksInput);
-    if (!assign) throw new Error('Assignment not found');
 
-    const subjectsData = Object.entries(marksInput).map(
-      ([subjectId, markObj]: [string, any]) => {
-        const subjectInfo: any = assign.subjectIds.find(
-          (s: any) => s._id.toString() === subjectId,
-        );
-        if (!subjectInfo) throw new Error('Subject not found');
+async updateMarks(
+  assignSubjectId: string,
+  marksInput: Record<string, Record<string, number>>, // { subjectId: { WR: 20, MCQ: 10 } }
+) {
+  const assign = await this.assignSubjectModel.findById(assignSubjectId);
+  if (!assign) throw new Error('Assignment not found');
 
-        let total = 0;
-        Object.entries(markObj).forEach(([type, value]) => {
-          total += Number(value) || 0;
-        });
-
-        if (total > (subjectInfo.totalMark || 100)) {
-          throw new Error(
-            `Total marks for ${subjectInfo.name} cannot exceed ${subjectInfo.totalMark || 100}`,
-          );
-        }
-
-        return {
-          subjectId: new Types.ObjectId(subjectId),
-          marks: markObj,
-          totalMark: total,
-        };
-      },
+  // Loop through input subjects
+  Object.entries(marksInput).forEach(([subjectId, markObj]) => {
+    const subjectMarks = assign.marks.find(
+      (m) => m.subjectId.toString() === subjectId,
     );
 
-    const existingMark = await this.studentMarkModel.findOne({
-      assignSubjectId,
-    });
-    if (existingMark) {
-      existingMark.subjects = subjectsData;
-      return existingMark.save();
-    } else {
-      const newMark = new this.studentMarkModel({
-        assignSubjectId,
-        studentId: assign.studentId,
-        subjects: subjectsData,
+    if (subjectMarks) {
+      // merge existing marks into the Map
+      Object.entries(markObj).forEach(([type, value]) => {
+        subjectMarks.marks.set(type, value); // ✅ use Map.set
       });
-      return newMark.save();
+    } else {
+      // create a new Map for new subject
+      assign.marks.push({
+        subjectId: new Types.ObjectId(subjectId),
+        marks: new Map(Object.entries(markObj)), // ✅ convert object to Map
+      });
     }
-  }
+  });
+
+  return assign.save();
+}
+
 }
