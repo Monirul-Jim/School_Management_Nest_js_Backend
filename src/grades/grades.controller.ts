@@ -1,15 +1,27 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
   Post,
   Query,
+  Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { GradeService } from './grades.service';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import type { Request } from 'express';
+
+export interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    role: 'Admin' | 'Teacher' | 'Student';
+    classId?: string;
+  };
+}
 
 @Controller('grades')
 export class GradesController {
@@ -58,5 +70,14 @@ export class GradesController {
         message: error.message || 'Failed to update marks',
       };
     }
+  }
+@Get('my-grades')
+  async getMyGrades(
+    @Query('userId') userId: string,
+    @Query() query: any,
+  ) {
+    if (!userId) throw new BadRequestException('userId query param is required');
+
+    return this.gradeService.getGradesByUserId(userId, query);
   }
 }

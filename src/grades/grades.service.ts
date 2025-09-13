@@ -108,4 +108,47 @@ async updateMarks(
   return assign.save();
 }
 
+  async getGradesByUserId(userId: string, queryParams: any) {
+    const filters = {
+      studentId: userId,
+    };
+
+    const qb = new QueryBuilder(this.assignSubjectModel, {
+      page: queryParams.page,
+      limit: queryParams.limit,
+      filters,
+      sortField: queryParams.sortField || 'createdAt',
+      sortOrder: queryParams.sortOrder || 'desc',
+    });
+
+    const result = await qb.execute();
+
+    const populatedData = await Promise.all(
+      result.data.map(async (assign: any) => {
+        const populated = await this.assignSubjectModel
+          .findById(assign._id)
+          .populate('studentId')
+          .populate('classId')
+          .populate('subjectIds')
+          .lean();
+
+        const marks =
+          (populated?.marks || []).map((m: any) => ({
+            ...m,
+            marks: m.marks ? Object.fromEntries(Object.entries(m.marks)) : {},
+          })) || [];
+
+        return { ...populated, marks };
+      }),
+    );
+
+    return {
+      total: result.total,
+      totalPages: result.totalPages,
+      page: result.page,
+      limit: result.limit,
+      data: populatedData,
+    };
+  }
+
 }
