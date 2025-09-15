@@ -1,3 +1,17 @@
+# 🏫 School Management System
+
+[![Built with NestJS](https://img.shields.io/badge/Backend-NestJS-blue?logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![Built with Next.js](https://img.shields.io/badge/Frontend-Next.js-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-16.x-green?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Swagger](https://img.shields.io/badge/API-Swagger-blue?logo=swagger&logoColor=white)](https://swagger.io/)
+
+
+
+
+
+
 # 🏫 School Management System  
 
 A **full-stack web application** for managing school operations, built with **NestJS (Backend)** and **Next.js (Frontend)**.  
@@ -133,18 +147,3 @@ Backend (NestJS + Mongoose + class-validator + JWT)
 📜 License
 
 This project is licensed under the MIT License.
-
-
-
----
-
-✨ Now the README is **corrected** for your **MongoDB + Mongoose + class-validator + JWT** backend.  
-
-Would you like me to also **add shields.io badges** at the top (e.g., "Built with Next.js", "NestJS", "MongoDB", "MIT License") so your GitHub page looks more **professional and eye-catching**?
-
-
-![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)
-![NestJS](https://img.shields.io/badge/Framework-NestJS-E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Styling-TailwindCSS-06B6D4.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
