@@ -27,7 +27,7 @@ Swagger is disabled in production because Vercel serverless functions cannot ser
 A **full-stack web application** for managing school operations, built with **NestJS (Backend)** and **Next.js (Frontend)**.  
 It helps schools manage **students, teachers, classes, subjects, exams, and attendance** with role-based dashboards.  
 
-🌐 **Live Demo** → [school-management.vercel.app](https://school-management.vercel.app)  
+🌐 **Live Demo** → [school-management-frontend-omega.vercel.app/](https://school-management-frontend-omega.vercel.app/)  
 
 ---
 
