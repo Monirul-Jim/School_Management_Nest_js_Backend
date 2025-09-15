@@ -1,98 +1,150 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏫 School Management System  
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A **full-stack web application** for managing school operations, built with **NestJS (Backend)** and **Next.js (Frontend)**.  
+It helps schools manage **students, teachers, classes, subjects, exams, and attendance** with role-based dashboards.  
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+🌐 **Live Demo** → [school-management.vercel.app](https://school-management.vercel.app)  
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📂 Project Structure  
 
-## Project setup
+- **Frontend (Next.js)** → [/School_Management_Nest_js_Nextjs_Frontend](https://github.com/Monirul-Jim/School_Management_Nest_js_Nextjs_Frontend)  
+- **Backend (NestJS)** → [/School_Management_Nest_js_Backend](https://github.com/Monirul-Jim/School_Management_Nest_js_Backend)  
+
+---
+
+## ✨ Features  
+
+- 🔐 **Authentication & Authorization** (JWT)  
+- 👨‍💼 **Role-based Access** → Admin, Teacher, Student  
+- 🏫 Manage **Students, Teachers, Classes, Subjects**  
+- 📝 Attendance tracking & exam results  
+- 📊 School-wide **Reports & Analytics Dashboard**  
+- 🎨 **Modern Responsive UI** (Next.js + TailwindCSS)  
+- 🗄️ **PostgreSQL Database** with TypeORM  
+- 📑 **Swagger API Documentation**  
+
+---
+
+## 👥 User Roles & Permissions  
+
+### 👨‍💼 Admin  
+Admins have **full system control**:  
+- Manage Teachers (add, edit, delete)  
+- Manage Students (enroll, update, remove)  
+- Create and assign Classes & Subjects  
+- Handle Exams & Attendance  
+- View Reports & Statistics  
+- Assign User Roles  
+
+---
+
+### 👩‍🏫 Teacher  
+Teachers can:  
+- Manage students in assigned classes  
+- Take Attendance  
+- Add / Update Exam Results  
+- View assigned Classes & Subjects  
+- Communicate with Students  
+
+---
+
+### 👩‍🎓 Student  
+Students can:  
+- View Profile & Class details  
+- See Attendance records  
+- Check Exam Results & Progress Reports  
+- Access Subjects  
+- Interact with Teachers  
+
+---
+
+## 🛠️ Tech Stack  
+
+**Frontend**  
+- ⚛️ Next.js (React Framework)  
+- 🎨 TailwindCSS  
+- 🔗 Redux  
+- 📝 React Hook Form  
+
+**Backend**  
+- 🚀 NestJS  
+- 🗄️ Mongoose  
+- 🐘 MongoDB  
+- 🔐 JWT Authentication  
+- 📑 Swagger  
+
+---
+
+## ⚙️ Installation & Setup  
+
+### 1️⃣ Clone Repositories  
 
 ```bash
-$ npm install
-```
+# Frontend
+git clone https://github.com/Monirul-Jim/School_Management_Nest_js_Nextjs_Frontend.git
 
-## Compile and run the project
+# Backend
+git clone https://github.com/Monirul-Jim/School_Management_Nest_js_Backend.git
 
-```bash
-# development
-$ npm run start
+2️⃣ Backend Setup
+cd School_Management_Nest_js_Backend
 
-# watch mode
-$ npm run start:dev
+# Install dependencies
+npm install
 
-# production mode
-$ npm run start:prod
-```
+# Copy env file
+cp .env.example .env
 
-## Run tests
 
-```bash
-# unit tests
-$ npm run test
+# Start backend server
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
+📌 Runs at → http://localhost:5000
 
-# test coverage
-$ npm run test:cov
-```
+3️⃣ Frontend Setup
 
-## Deployment
+cd School_Management_Nest_js_Nextjs_Frontend
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+# Install dependencies
+npm install
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+# Copy env file
+cp .env.example .env
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+# Start frontend server
+npm run dev
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-## Resources
+🏗️ System Architecture
 
-Check out a few resources that may come in handy when working with NestJS:
+Frontend (Next.js + TailwindCSS)
+          |
+          | REST API (Axios)
+          v
+Backend (NestJS + Mongoose + class-validator + JWT)
+          |
+          v
+        MongoDB
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+📜 License
 
-## Stay in touch
+This project is licensed under the MIT License.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+✨ Now the README is **corrected** for your **MongoDB + Mongoose + class-validator + JWT** backend.  
+
+Would you like me to also **add shields.io badges** at the top (e.g., "Built with Next.js", "NestJS", "MongoDB", "MIT License") so your GitHub page looks more **professional and eye-catching**?
+
+
+![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)
+![NestJS](https://img.shields.io/badge/Framework-NestJS-E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Styling-TailwindCSS-06B6D4.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
