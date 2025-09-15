@@ -21,24 +21,35 @@ The backend uses **Swagger** for API documentation, which is **only available in
   npm run start:dev
 Swagger is disabled in production because Vercel serverless functions cannot serve static assets required by Swagger UI.
 
+---
 
-# 🏫 School Management System  
+## 🔑 Demo Credentials
+
+| Role    | Email                     | Password   |
+|---------|---------------------------|-----------|
+| Student | cubidojegu@mailinator.com | 12345678  |
+| Teacher | motiur@gmail.com          | 12345678  |
+| Admin   | monirul@gmail.com         | 12345678  |
+
+---
+
+# 🏫 School Management System
 
 A **full-stack web application** for managing school operations, built with **NestJS (Backend)** and **Next.js (Frontend)**.  
-It helps schools manage **students, teachers, classes, subjects, exams, and attendance** with role-based dashboards.  
+It helps schools manage **students, teachers, classes, subjects, exams, and attendance** with role-based dashboards.
 
-🌐 **Live Demo** → [school-management-frontend-omega.vercel.app/](https://school-management-frontend-omega.vercel.app/)  
-
----
-
-## 📂 Project Structure  
-
-- **Frontend (Next.js)** → [/School_Management_Nest_js_Nextjs_Frontend](https://github.com/Monirul-Jim/School_Management_Nest_js_Nextjs_Frontend)  
-- **Backend (NestJS)** → [/School_Management_Nest_js_Backend](https://github.com/Monirul-Jim/School_Management_Nest_js_Backend)  
+🌐 **Live Demo** → [school-management.vercel.app](https://school-management.vercel.app)
 
 ---
 
-## ✨ Features  
+## 📂 Project Structure
+
+- **Frontend (Next.js)** → [GitHub Repo](https://github.com/Monirul-Jim/School_Management_Nest_js_Nextjs_Frontend)  
+- **Backend (NestJS + MongoDB)** → [GitHub Repo](https://github.com/Monirul-Jim/School_Management_Nest_js_Backend)  
+
+---
+
+## ✨ Features
 
 - 🔐 **Authentication & Authorization** (JWT)  
 - 👨‍💼 **Role-based Access** → Admin, Teacher, Student  
@@ -46,15 +57,17 @@ It helps schools manage **students, teachers, classes, subjects, exams, and atte
 - 📝 Attendance tracking & exam results  
 - 📊 School-wide **Reports & Analytics Dashboard**  
 - 🎨 **Modern Responsive UI** (Next.js + TailwindCSS)  
-- 🗄️ **PostgreSQL Database** with TypeORM  
-- 📑 **Swagger API Documentation**  
+- 🗄️ **MongoDB Database** with Mongoose  
+- 🧪 **Validation** with `class-validator`  
+- 📑 **Swagger API Documentation** (dev only)
 
 ---
 
-## 👥 User Roles & Permissions  
+## 👥 User Roles & Permissions
 
-### 👨‍💼 Admin  
-Admins have **full system control**:  
+### 👨‍💼 Admin
+Admins have **full system control**:
+
 - Manage Teachers (add, edit, delete)  
 - Manage Students (enroll, update, remove)  
 - Create and assign Classes & Subjects  
@@ -62,48 +75,49 @@ Admins have **full system control**:
 - View Reports & Statistics  
 - Assign User Roles  
 
----
+### 👩‍🏫 Teacher
+Teachers can:
 
-### 👩‍🏫 Teacher  
-Teachers can:  
 - Manage students in assigned classes  
 - Take Attendance  
 - Add / Update Exam Results  
 - View assigned Classes & Subjects  
 - Communicate with Students  
 
----
+### 👩‍🎓 Student
+Students can:
 
-### 👩‍🎓 Student  
-Students can:  
 - View Profile & Class details  
 - See Attendance records  
 - Check Exam Results & Progress Reports  
 - Access Subjects  
 - Interact with Teachers  
 
----
 
-## 🛠️ Tech Stack  
+
+## 🛠️ Tech Stack
 
 **Frontend**  
+
 - ⚛️ Next.js (React Framework)  
 - 🎨 TailwindCSS  
-- 🔗 Redux  
+- 🔗 Axios  
 - 📝 React Hook Form  
 
 **Backend**  
+
 - 🚀 NestJS  
-- 🗄️ Mongoose  
-- 🐘 MongoDB  
+- 🐘 MongoDB + Mongoose  
 - 🔐 JWT Authentication  
-- 📑 Swagger  
+- 🧪 Class-validator  
+- 📑 Swagger (dev only)  
+- 🍪 Cookie-parser  
 
 ---
 
-## ⚙️ Installation & Setup  
+## ⚙️ Installation & Setup
 
-### 1️⃣ Clone Repositories  
+### 1️⃣ Clone Repositories
 
 ```bash
 # Frontend
@@ -111,6 +125,8 @@ git clone https://github.com/Monirul-Jim/School_Management_Nest_js_Nextjs_Fronte
 
 # Backend
 git clone https://github.com/Monirul-Jim/School_Management_Nest_js_Backend.git
+
+
 
 2️⃣ Backend Setup
 cd School_Management_Nest_js_Backend
