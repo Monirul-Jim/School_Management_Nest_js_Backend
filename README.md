@@ -10,6 +10,16 @@
 
 
 
+## 📄 API Documentation (Swagger)
+
+The backend uses **Swagger** for API documentation, which is **only available in development**.
+
+- **Local Development:**  
+  Run the backend server: http://localhost:5000/api/docs
+
+  ```bash
+  npm run start:dev
+Swagger is disabled in production because Vercel serverless functions cannot serve static assets required by Swagger UI.
 
 
 # 🏫 School Management System  
